@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "731460469595",
+    "firebase_url": "https://fitnessfriends-1fa04.firebaseio.com",
+    "project_id": "fitnessfriends-1fa04",
+    "storage_bucket": "fitnessfriends-1fa04.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731460469595:android:dd8e1b7520c62edc",
+        "android_client_info": {
+          "package_name": "com.example.vincent.fitnessfriends"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "731460469595-i2sassgdr93bksid5h1bcnrdrgo4qd6u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vincent.fitnessfriends",
+            "certificate_hash": "28F2A5B1A7AD5C8049A1351F293BDD47A29751C5"
+          }
+        },
+        {
+          "client_id": "731460469595-ce6dogvt7henmaahm7b2fdu2jlfa9fk5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXAIRNcnwv7yvZvrJbEnxJn36GpEWXdy8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731460469595-ce6dogvt7henmaahm7b2fdu2jlfa9fk5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

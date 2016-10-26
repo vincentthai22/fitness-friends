@@ -2,6 +2,8 @@ package com.example.vincent.fitnessfriends;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -9,6 +11,8 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.Toast;
+
+import com.google.firebase.auth.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,19 +22,42 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.widget.LoginButton;
 
+import static android.content.ContentValues.TAG;
+
 public class MainActivity extends Activity {
 
-    expanderSkeleton liAdapt;
-    ExpandableListView liView;
-    List<String> liHead;
-    HashMap<String, List<String>> liChild;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private expanderSkeleton liAdapt;
+    private ExpandableListView liView;
+
+    private List<String> liHead;
+    private HashMap<String, List<String>> liChild;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_main);
+
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
 
         liView = (ExpandableListView) findViewById(R.id.lvExp);
 
@@ -92,6 +119,19 @@ public class MainActivity extends Activity {
         });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
     private void makeLists() {
         liHead = new ArrayList<>();
         liChild = new HashMap<>();
