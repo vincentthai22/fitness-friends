@@ -1,6 +1,7 @@
 package com.example.vincent.fitnessfriends;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.google.firebase.auth.*;
 
 import java.util.ArrayList;
@@ -35,15 +38,24 @@ public class MainActivity extends Activity {
     private List<String> liHead;
     private HashMap<String, List<String>> liChild;
 
+    private AccessTokenTracker fbTracker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        startLoginActivity();
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_main);
-
-
+        fbTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken accessToken, AccessToken accessToken2) {
+                if (accessToken2 == null) {
+                    Log.d("FB", "User Logged Out.");
+                    finish();
+                }
+            }
+        };
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -118,7 +130,10 @@ public class MainActivity extends Activity {
             }
         });
     }
-
+    public void startLoginActivity(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
     @Override
     public void onStart() {
         super.onStart();
