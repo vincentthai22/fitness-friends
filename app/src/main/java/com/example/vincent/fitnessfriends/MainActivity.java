@@ -29,25 +29,26 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends Activity {
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-
+    private FirebaseAuth mAuth;                                     //fire base classes
+    private FirebaseAuth.AuthStateListener mAuthListener;           //i haven't gotten around to looking at
+                                                                    //how to implement it  yet
     private expanderSkeleton liAdapt;
     private ExpandableListView liView;
 
     private List<String> liHead;
     private HashMap<String, List<String>> liChild;
 
-    private AccessTokenTracker fbTracker;
+    private AccessTokenTracker fbTracker;                           //fb tracker used to detect changes log in/out
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         startLoginActivity();
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_main);
-        fbTracker = new AccessTokenTracker() {
+        fbTracker = new AccessTokenTracker() {                      //uses token to check if user has logged out.
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken accessToken, AccessToken accessToken2) {
                 if (accessToken2 == null) {
