@@ -71,65 +71,65 @@ public class MainActivity extends Activity {
                 // ...
             }
         };
-
-        liView = (ExpandableListView) findViewById(R.id.lvExp);
-
-
-        makeLists();
-
-        liAdapt = new expanderSkeleton(this, liHead, liChild);
-
-
-        liView.setAdapter(liAdapt);
-
-
-        liView.setOnGroupClickListener(new OnGroupClickListener() {
-
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v,
-                                        int groupPosition, long id) {
-
-                return false;
-            }
-        });
-
-        liView.setOnGroupCollapseListener(new OnGroupCollapseListener() {
-
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        liHead.get(groupPosition) + " Minimized",
-                        Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        liView.setOnGroupExpandListener(new OnGroupExpandListener() {
-
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        liHead.get(groupPosition) + " Inflated",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        liView.setOnChildClickListener(new OnChildClickListener() {
-
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                Toast.makeText(
-                        getApplicationContext(),
-                        liHead.get(groupPosition)
-                                + " : "
-                                + liChild.get(
-                                liHead.get(groupPosition)).get(
-                                childPosition), Toast.LENGTH_SHORT)
-                        .show();
-                return false;
-            }
-        });
+//
+//        liView = (ExpandableListView) findViewById(R.id.lvExp);
+//
+//
+//        makeLists();
+//
+//        liAdapt = new expanderSkeleton(this, liHead, liChild);
+//
+//
+//        liView.setAdapter(liAdapt);
+//
+//
+//        liView.setOnGroupClickListener(new OnGroupClickListener() {
+//
+//            @Override
+//            public boolean onGroupClick(ExpandableListView parent, View v,
+//                                        int groupPosition, long id) {
+//
+//                return false;
+//            }
+//        });
+//
+//        liView.setOnGroupCollapseListener(new OnGroupCollapseListener() {
+//
+//            @Override
+//            public void onGroupCollapse(int groupPosition) {
+//                Toast.makeText(getApplicationContext(),
+//                        liHead.get(groupPosition) + " Minimized",
+//                        Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+//
+//        liView.setOnGroupExpandListener(new OnGroupExpandListener() {
+//
+//            @Override
+//            public void onGroupExpand(int groupPosition) {
+//                Toast.makeText(getApplicationContext(),
+//                        liHead.get(groupPosition) + " Inflated",
+//                        Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        liView.setOnChildClickListener(new OnChildClickListener() {
+//
+//            @Override
+//            public boolean onChildClick(ExpandableListView parent, View v,
+//                                        int groupPosition, int childPosition, long id) {
+//                Toast.makeText(
+//                        getApplicationContext(),
+//                        liHead.get(groupPosition)
+//                                + " : "
+//                                + liChild.get(
+//                                liHead.get(groupPosition)).get(
+//                                childPosition), Toast.LENGTH_SHORT)
+//                        .show();
+//                return false;
+//            }
+//        });
     }
     public void startLoginActivity(){
         Intent intent = new Intent(this, LoginActivity.class);
