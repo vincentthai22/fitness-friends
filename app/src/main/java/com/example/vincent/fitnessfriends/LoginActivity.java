@@ -32,6 +32,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -91,6 +92,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     public void onSuccess(LoginResult loginResult) {
                         Log.d("loginsuccess", "success");
                         finish();
+                        startMainActivity();
                     }
 
                     @Override
@@ -132,11 +134,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
-
+    public void startMainActivity(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
     public void checkToken(){
         try {
-            if (Profile.getCurrentProfile().getFirstName() != null)
+            if (Profile.getCurrentProfile().getFirstName() != null) {
+                Toast.makeText(getApplicationContext(), "You are logged in as " + Profile.getCurrentProfile().getName(), Toast.LENGTH_LONG);
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("loginInfo", "You are logged in as " + Profile.getCurrentProfile().getName() );
                 finish();
+                startActivity(intent);
+            }
         }catch(NullPointerException e){
 
         }

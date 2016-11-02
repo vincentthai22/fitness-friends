@@ -1,16 +1,17 @@
 package com.example.vincent.fitnessfriends;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ExpandableListView.OnGroupClickListener;
-import android.widget.ExpandableListView.OnGroupCollapseListener;
-import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -23,11 +24,10 @@ import java.util.List;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.widget.LoginButton;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;                                     //fire base classes
     private FirebaseAuth.AuthStateListener mAuthListener;           //i haven't gotten around to looking at
@@ -41,8 +41,6 @@ public class MainActivity extends Activity {
     private AccessTokenTracker fbTracker;                           //fb tracker used to detect changes log in/out
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        startLoginActivity();
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -53,6 +51,8 @@ public class MainActivity extends Activity {
             protected void onCurrentAccessTokenChanged(AccessToken accessToken, AccessToken accessToken2) {
                 if (accessToken2 == null) {
                     Log.d("FB", "User Logged Out.");
+                    finish();
+                    startLoginActivity();
                     finish();
                 }
             }
@@ -71,7 +71,17 @@ public class MainActivity extends Activity {
                 // ...
             }
         };
-//
+        Bundle extras = getIntent().getExtras();
+        if( extras != null) Toast.makeText(getApplicationContext(), ""+ extras.get("loginInfo"), Toast.LENGTH_LONG );
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new FragmentPageAdapter(getSupportFragmentManager(),
+                MainActivity.this));
+
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+    }
 //        liView = (ExpandableListView) findViewById(R.id.lvExp);
 //
 //
@@ -130,11 +140,12 @@ public class MainActivity extends Activity {
 //                return false;
 //            }
 //        });
-    }
+
     public void startLoginActivity(){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -148,6 +159,7 @@ public class MainActivity extends Activity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
     private void makeLists() {
         liHead = new ArrayList<>();
         liChild = new HashMap<>();
