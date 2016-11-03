@@ -59,6 +59,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
+    //Keys to get String info from facebook
+    private static final String FACEBOOK_NAME = "facebookLogin";
+
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
@@ -135,17 +138,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
     public void startMainActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+        intent.putExtra(FACEBOOK_NAME, "You are logged in as " + Profile.getCurrentProfile().getName() );
+        Log.d("Facebook", Profile.getCurrentProfile().getName());
         startActivity(intent);
     }
+
     public void checkToken(){
         try {
             if (Profile.getCurrentProfile().getFirstName() != null) {
-                Toast.makeText(getApplicationContext(), "You are logged in as " + Profile.getCurrentProfile().getName(), Toast.LENGTH_LONG);
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("loginInfo", "You are logged in as " + Profile.getCurrentProfile().getName() );
                 finish();
-                startActivity(intent);
+                startMainActivity();
             }
         }catch(NullPointerException e){
 
@@ -158,39 +161,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
-//
-//
-//    public View onCreateView(
-//            LayoutInflater inflater,
-//            ViewGroup container,
-//            Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.splash, container, false);
-//
-//        loginButton = (LoginButton) view.findViewById(R.id.login_button);
-//        loginButton.setReadPermissions("email");
-//        // If using in a fragment
-//       // loginButton.setFragment();
-//        // Other app specific specialization
-//
-//        // Callback registration
-//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                // App code
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                // App code
-//            }
-//
-//            @Override
-//            public void onError(FacebookException exception) {
-//                // App code
-//            }
-//        });
-//        return view;
-//    }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {

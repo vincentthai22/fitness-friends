@@ -9,16 +9,21 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.*;
 
 import java.util.ArrayList;
@@ -41,7 +46,11 @@ public class MainActivity extends AppCompatActivity {
     private List<String> liHead;
     private HashMap<String, List<String>> liChild;
 
-    private AccessTokenTracker fbTracker;                           //fb tracker used to detect changes log in/out
+    private AccessTokenTracker fbTracker;//fb tracker used to detect changes log in/out
+
+    //Keys to get String info from facebook
+    private static final String FACEBOOK_NAME = "facebookLogin";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +65,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("FB", "User Logged Out.");
                     finish();
                     startLoginActivity();
-                    finish();
                 }
             }
         };
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -74,9 +83,31 @@ public class MainActivity extends AppCompatActivity {
                 // ...
             }
         };
+        initialize();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case R.id.logoutButton:
+                LoginManager.getInstance().logOut();
+                return true;
+            case R.id.action_settings:
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void initialize(){
         Bundle extras = getIntent().getExtras();
-        if( extras != null) Toast.makeText(getApplicationContext(), ""+ extras.get("loginInfo"), Toast.LENGTH_LONG );
+        extras.getString(FACEBOOK_NAME);
+        Toast.makeText(getApplicationContext(), ""+ extras.get("loginInfo"), Toast.LENGTH_LONG );
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -86,15 +117,68 @@ public class MainActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-        //floating action button
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(MainActivity.this, "Fab has been pressed", Toast.LENGTH_LONG);
-//            }
-//        });
+
+        // Find the toolbar view inside the activity layout
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Sets the Toolbar to act as the ActionBar for this Activity window.
+        // Make sure the toolbar exists in the activity and is not null
+        setSupportActionBar(toolbar);
+
     }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.android_toolbar, menu);
+        return true;
+    }
+
+    public void startLoginActivity(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    private void makeLists() {
+        liHead = new ArrayList<>();
+        liChild = new HashMap<>();
+
+        // Add option data
+        liHead.add("profile");
+        liHead.add("friends");
+        liHead.add("data");
+
+        // Add more sub-options here
+        List<String> profileOptions = new ArrayList<>();
+        profileOptions.add("op 1");
+        profileOptions.add("op 2");
+
+        List<String> friendsOptions = new ArrayList<>();
+        friendsOptions.add("op 1");
+
+        List<String> dataOptions = new ArrayList<>();
+        dataOptions.add("op 2");
+
+
+        liChild.put(liHead.get(0), profileOptions);
+        liChild.put(liHead.get(1), friendsOptions);
+        liChild.put(liHead.get(2), dataOptions);
+    }
+}
+
+//        Josh's old code
 //        liView = (ExpandableListView) findViewById(R.id.lvExp);
 //
 //
@@ -153,49 +237,3 @@ public class MainActivity extends AppCompatActivity {
 //                return false;
 //            }
 //        });
-
-    public void startLoginActivity(){
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
-    private void makeLists() {
-        liHead = new ArrayList<>();
-        liChild = new HashMap<>();
-
-        // Add option data
-        liHead.add("profile");
-        liHead.add("friends");
-        liHead.add("data");
-
-        // Add more sub-options here
-        List<String> profileOptions = new ArrayList<>();
-        profileOptions.add("op 1");
-        profileOptions.add("op 2");
-
-        List<String> friendsOptions = new ArrayList<>();
-        friendsOptions.add("op 1");
-
-        List<String> dataOptions = new ArrayList<>();
-        dataOptions.add("op 2");
-
-
-        liChild.put(liHead.get(0), profileOptions);
-        liChild.put(liHead.get(1), friendsOptions);
-        liChild.put(liHead.get(2), dataOptions);
-    }
-}
