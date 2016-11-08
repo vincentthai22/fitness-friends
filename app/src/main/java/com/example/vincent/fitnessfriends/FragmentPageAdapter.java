@@ -11,8 +11,8 @@ import android.support.v4.view.PagerAdapter;
  */
 
 public class FragmentPageAdapter extends FragmentPagerAdapter {
-    final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[] { "Profile", "Friends", "Routines" };
+    final int PAGE_COUNT = 4;
+    private String tabTitles[] = new String[] { "Profile", "Friends", "Routines","Search" };
     private Context context;
 
     public FragmentPageAdapter(FragmentManager fm, Context context) {
@@ -27,7 +27,12 @@ public class FragmentPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return FriendsFragment.newInstance(position + 1);
+        switch(position) {
+            case 0:
+                return ProfileFragment.newInstance(position + 1);
+            default:
+                return FriendsFragment.newInstance(position + 1);
+        }
     }
 
     @Override

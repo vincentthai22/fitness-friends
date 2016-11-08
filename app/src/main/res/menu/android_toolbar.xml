@@ -24,7 +24,7 @@
 
     <item
         android:id="@+id/logoutButton"
-        app:showAsAction="ifRoom|withText"
+        app:showAsAction="never"
         android:title="Logout">
     </item>
 
