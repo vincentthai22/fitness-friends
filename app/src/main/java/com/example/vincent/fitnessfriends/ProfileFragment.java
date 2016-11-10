@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.Profile;
-
 /**
  * Created by Vincent on 11/1/2016.
  */
@@ -36,10 +34,10 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_friends_tab, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
         LinearLayout ll = (LinearLayout) view;
-        TextView textView = (TextView) ll.findViewById(R.id.fragmentText);
-        textView.setText("Fragment # Friends" + mPage);
+        //TextView textView = (TextView) ll.findViewById(R.id.fragmentText);
+       // textView.setText("Fragment # Friends" + mPage);
         return view;
     }
 }

@@ -13,6 +13,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,10 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.*;
 
@@ -107,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     public void initialize(){
         Bundle extras = getIntent().getExtras();
         extras.getString(FACEBOOK_NAME);
-        Toast.makeText(getApplicationContext(), ""+ extras.get("loginInfo"), Toast.LENGTH_LONG );
+        Toast.makeText(getApplicationContext(),"Logged in as " + Profile.getCurrentProfile().getName(), Toast.LENGTH_LONG ).show();
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -124,6 +129,23 @@ public class MainActivity extends AppCompatActivity {
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
 
+        ArrayList<String> temp = getFriendsList();
+    }
+
+    public ArrayList<String> getFriendsList(){
+        /* make the API call */
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/{friend-list-id}",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+            /* handle the result */
+                    }
+                }
+        ).executeAsync();
+        return new ArrayList<>();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

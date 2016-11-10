@@ -12,7 +12,7 @@ import android.support.v4.view.PagerAdapter;
 
 public class FragmentPageAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 4;
-    private String tabTitles[] = new String[] { "Profile", "Friends", "Routines","Search" };
+    private String tabTitles[] = new String[] { "Profile", "Friends", "Routines", "Search" };
     private Context context;
 
     public FragmentPageAdapter(FragmentManager fm, Context context) {
@@ -27,13 +27,13 @@ public class FragmentPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        switch(position) {
-            case 0:
-                return ProfileFragment.newInstance(position + 1);
+        switch(position) {                                              //cases are respective to the tabTitles array.
+            case 0:                                                     //make a new xml file to change the layout of
+                return ProfileFragment.newInstance(position + 1);       //a desired individual fragment.
             default:
-                return FriendsFragment.newInstance(position + 1);
-        }
-    }
+                return FriendsFragment.newInstance(position + 1);       //Ex: case 0 is respective to index 0 which is
+        }                                                               //profile frag. Within ProfileFragment.java the
+    }                                                                   //fragment is assigned a separate view (xml file).
 
     @Override
     public CharSequence getPageTitle(int position) {
