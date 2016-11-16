@@ -103,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
                 // ...
             }
         };
-        initialize();
+
+
+       //initialize();
 
     }
 
@@ -129,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
     public void initialize(){
         if(Profile.getCurrentProfile() != null) {
