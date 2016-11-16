@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-       //initialize();
+       initialize();
 
     }
 

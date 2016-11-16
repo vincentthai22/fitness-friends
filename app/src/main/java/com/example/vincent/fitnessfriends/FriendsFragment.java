@@ -52,12 +52,17 @@ public class FriendsFragment extends Fragment {
         TextView text = new TextView(getContext());
         text.setText("Friends");
         list.addHeaderView(text);
-        nameList.add("Vincent");
+        nameList.add("Vincent Thai");
+        nameList.add("Josh Granata");
+        nameList.add("Sam Lee");
         nameList.add(getActivity().getIntent().getExtras().get(JSON_FRIENDS_LIST) + "");
         //nameList.add(getActivity().getIntent().getExtras().get(JSON_FRIENDS_LIST) + "");
         MyArrayAdapter adapter = new MyArrayAdapter(this.getContext(),R.layout.list_item, nameList);
         list.setAdapter(adapter);
         return view;
+    }
+    public void parseJSON(List<String> list, String temp){
+
     }
 }
 class MyArrayAdapter extends ArrayAdapter{
