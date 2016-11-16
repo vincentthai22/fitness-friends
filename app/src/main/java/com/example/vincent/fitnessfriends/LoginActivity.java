@@ -3,6 +3,7 @@ package com.example.vincent.fitnessfriends;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -50,6 +51,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -87,6 +89,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private final Activity temp = this;
+
     private LoginButton loginButton;
     private CallbackManager callbackManager;
 
@@ -99,12 +103,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         Log.d("loginsuccess", "success");
+                        LoginManager.getInstance().logInWithReadPermissions(temp, Arrays.asList("user_friends"));
                         finish();
                         startMainActivity();
                     }
@@ -186,12 +190,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public void startMainActivity(){
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
-        intent.putExtra(FACEBOOK_NAME, "You are logged in as " + Profile.getCurrentProfile().getName() );
-        Log.d("Facebook", Profile.getCurrentProfile().getName());
+        if(Profile.getCurrentProfile() != null) {
+            intent.putExtra(FACEBOOK_NAME, "You are logged in as " + Profile.getCurrentProfile().getName());
+            Log.d("Facebook", Profile.getCurrentProfile().getName());
+        }
         startActivity(intent);
     }
 
     public void checkToken(){
+        LoginManager.getInstance().logInWithReadPermissions(temp, Arrays.asList("user_friends"));
         try {
             if (Profile.getCurrentProfile().getFirstName() != null) {
                 finish();
@@ -264,7 +271,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
-
+        checkToken();
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();

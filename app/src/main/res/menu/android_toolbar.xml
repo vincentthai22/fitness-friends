@@ -9,7 +9,7 @@
 
     <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/action_settings"
-        android:title="Settings"
+        android:title="@string/settings"
         app:showAsAction="never"/>
 
     <!--<item-->
@@ -18,14 +18,20 @@
         <!--android:title="Compose">-->
     <!--</item>-->
     <item
-        android:id="@+id/home"
+        android:id="@+id/editProfileButton"
         app:showAsAction="never"
-        android:title="Back"/>
-
+        android:title="@string/edit_profile"/>
+    <item
+        android:id="@+id/searchButton"
+        app:showAsAction= "ifRoom|never"
+        android:title="@string/searchButton"
+        android:icon="@drawable/magnifying_glass_icon" />
     <item
         android:id="@+id/logoutButton"
         app:showAsAction="never"
-        android:title="Logout">
+        android:title="@string/logout">
     </item>
+
+
 
 </menu>

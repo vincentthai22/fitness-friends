@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/fontawesome_f110_256"/>
+            android:src="@drawable/fitnessicon"/>
     </item>
 
 </layer-list>

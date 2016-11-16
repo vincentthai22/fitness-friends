@@ -48,7 +48,7 @@ public class expanderSkeleton extends BaseExpandableListAdapter {
         }
 
         TextView txtListChild = (TextView) changeView
-                .findViewById(R.id.lblListItem);
+                .findViewById(R.id.nameLabel);
 
         txtListChild.setText(childText);
         return changeView;

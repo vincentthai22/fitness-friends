@@ -37,6 +37,10 @@ import java.util.List;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.json.JSONException;
 
 import static android.content.ContentValues.TAG;
 
@@ -56,8 +60,15 @@ public class MainActivity extends AppCompatActivity {
     //Keys to get String info from facebook
     private static final String FACEBOOK_NAME = "facebookLogin";
 
+    //FireBase database instances
+    // Write a message to the database
+    public static FirebaseDatabase database = FirebaseDatabase.getInstance();
+    public static DatabaseReference myRef = database.getReference("message");
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        myRef.setValue("Hello database");
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -94,25 +105,33 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                if(NavUtils.getParentActivityIntent(this) != null)
+                    NavUtils.navigateUpFromSameTask(this);
+                else
+                    LoginManager.getInstance().logOut();
                 return true;
             case R.id.logoutButton:
                 LoginManager.getInstance().logOut();
                 return true;
             case R.id.action_settings:
                 return true;
-
+            case R.id.editProfileButton:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     public void initialize(){
         Bundle extras = getIntent().getExtras();
-        extras.getString(FACEBOOK_NAME);
-        Toast.makeText(getApplicationContext(),"Logged in as " + Profile.getCurrentProfile().getName(), Toast.LENGTH_LONG ).show();
+        if(Profile.getCurrentProfile() != null) {
+            extras.getString(FACEBOOK_NAME);
+            Toast.makeText(getApplicationContext(), "Logged in as " + Profile.getCurrentProfile().getName(), Toast.LENGTH_LONG).show();
+        }
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -127,21 +146,33 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         // Sets the Toolbar to act as the ActionBar for this Activity window.
         // Make sure the toolbar exists in the activity and is not null
+
+        //setup up button
         setSupportActionBar(toolbar);
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         ArrayList<String> temp = getFriendsList();
     }
 
     public ArrayList<String> getFriendsList(){
+        if(Profile.getCurrentProfile().getId() != null)
+            Log.d("FACEBOOK", Profile.getCurrentProfile().getId());
         /* make the API call */
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
-                "/{friend-list-id}",
+                "/"+Profile.getCurrentProfile().getId()+"/friends",
                 null,
                 HttpMethod.GET,
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
-            /* handle the result */
+                        Log.d("FACEBOOK", response.toString());
+                        Log.d("FACEBOOK", response.getRawResponse());
+                        try {
+                            Log.d("FACEBOOK", response.getJSONObject().getString("data"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
         ).executeAsync();
