@@ -40,6 +40,9 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -50,11 +53,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static com.example.vincent.fitnessfriends.FriendsFragment.JSON_FRIENDS_LIST;
 
 /**
  * A login screen that offers login via email/password.
@@ -192,9 +198,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
         if(Profile.getCurrentProfile() != null) {
             intent.putExtra(FACEBOOK_NAME, "You are logged in as " + Profile.getCurrentProfile().getName());
-            Log.d("Facebook", Profile.getCurrentProfile().getName());
+            Log.d("Facebook", intent.getExtras().getString(FACEBOOK_NAME));
         }
-        startActivity(intent);
+        finish();
+        getFriendsList();
+    }
+    public void getFriendsList(){
+        if(Profile.getCurrentProfile() != null)
+            if(Profile.getCurrentProfile().getId() != null)
+                Log.d("FACEBOOK", Profile.getCurrentProfile().getId());
+        /* make the API call */
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/"+Profile.getCurrentProfile().getId()+"/friends",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        Log.d("FACEBOOK", response.toString());
+                        Log.d("FACEBOOK", response.getRawResponse());
+                        try {
+                            Log.d("FACEBOOK", response.getJSONObject().getString("data"));
+                            String temp = response.getJSONObject().getString("data");
+                            Intent i = new Intent(getBaseContext(), MainActivity.class);
+                            i.putExtra(JSON_FRIENDS_LIST, temp);
+                            startActivity(i);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).executeAsync();
     }
 
     public void checkToken(){

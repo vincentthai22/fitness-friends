@@ -3,6 +3,7 @@ package com.example.vincent.fitnessfriends;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -41,8 +42,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import static android.content.ContentValues.TAG;
+import static com.example.vincent.fitnessfriends.FriendsFragment.JSON_FRIENDS_LIST;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        Log.d("FACEBOOKJSON", getIntent().getExtras().getString(JSON_FRIENDS_LIST));
         setContentView(R.layout.activity_main);
         fbTracker = new AccessTokenTracker() {                      //uses token to check if user has logged out.
             @Override
@@ -127,9 +131,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initialize(){
-        Bundle extras = getIntent().getExtras();
         if(Profile.getCurrentProfile() != null) {
-            extras.getString(FACEBOOK_NAME);
             Toast.makeText(getApplicationContext(), "Logged in as " + Profile.getCurrentProfile().getName(), Toast.LENGTH_LONG).show();
         }
 
@@ -150,34 +152,13 @@ public class MainActivity extends AppCompatActivity {
         //setup up button
         setSupportActionBar(toolbar);
         android.support.v7.app.ActionBar ab = getSupportActionBar();
+
         ab.setDisplayHomeAsUpEnabled(true);
 
-        ArrayList<String> temp = getFriendsList();
+       // ArrayList<String> temp = getFriendsList();
     }
 
-    public ArrayList<String> getFriendsList(){
-        if(Profile.getCurrentProfile().getId() != null)
-            Log.d("FACEBOOK", Profile.getCurrentProfile().getId());
-        /* make the API call */
-        new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/"+Profile.getCurrentProfile().getId()+"/friends",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
-                        Log.d("FACEBOOK", response.toString());
-                        Log.d("FACEBOOK", response.getRawResponse());
-                        try {
-                            Log.d("FACEBOOK", response.getJSONObject().getString("data"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-        ).executeAsync();
-        return new ArrayList<>();
-    }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
