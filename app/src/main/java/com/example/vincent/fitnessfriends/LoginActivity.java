@@ -241,12 +241,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void startMainActivity(){
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
         if(Profile.getCurrentProfile() != null) {
-            intent.putExtra(FACEBOOK_NAME, "You are logged in as " + Profile.getCurrentProfile().getName());
+            intent.putExtra(FACEBOOK_NAME, Profile.getCurrentProfile().getName());
             Log.d("Facebook", intent.getExtras().getString(FACEBOOK_NAME));
         }
         finish();
         getFriendsList();
     }
+    /*
+    *  getFriendsList -- this method is executed as soon as the facebook credentials are verified.
+    *  The getFriendsList method gets the friendslist in the form of a JSONObject and extracts
+    *  the data into the form of a string where it is stored
+     */
     public void getFriendsList(){
         if(Profile.getCurrentProfile() != null) {
             if (Profile.getCurrentProfile().getId() != null)
@@ -278,9 +283,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void checkToken(){
-        LoginManager.getInstance().logInWithReadPermissions(temp, Arrays.asList("user_friends"));
         try {
             if (Profile.getCurrentProfile().getFirstName() != null) {
+                LoginManager.getInstance().logInWithReadPermissions(temp, Arrays.asList("user_friends"));
                 finish();
                 startMainActivity();
             }

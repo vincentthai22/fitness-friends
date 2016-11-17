@@ -30,6 +30,11 @@
     <string name="logout">Logout</string>
     <string name="settings">Settings</string>
     <string name="searchButton">Search</string>
+
+    <!--AlertBoxStrings-->
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

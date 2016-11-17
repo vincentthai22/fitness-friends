@@ -2,16 +2,20 @@ package com.example.vincent.fitnessfriends;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telecom.Call;
@@ -68,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseDatabase database = FirebaseDatabase.getInstance();
     public static DatabaseReference myRef = database.getReference("message");
 
+    AlertDialog.Builder builder;
+    AlertDialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                     LoginManager.getInstance().logOut();
                 return true;
             case R.id.logoutButton:
-                LoginManager.getInstance().logOut();
+                dialog.show();
                 return true;
             case R.id.action_settings:
                 return true;
@@ -158,9 +165,25 @@ public class MainActivity extends AppCompatActivity {
 
         ab.setDisplayHomeAsUpEnabled(true);
 
-       // ArrayList<String> temp = getFriendsList();
+       setAlertBox();
     }
+    public void setAlertBox(){
+        builder = new AlertDialog.Builder(this);
+        builder.setMessage("Log out as " + Profile.getCurrentProfile().getName()+"?");
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                LoginManager.getInstance().logOut();
+            }
+        });
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
+            }
+        });
+        dialog = builder.create();
+    }
 
 
     public boolean onCreateOptionsMenu(Menu menu) {

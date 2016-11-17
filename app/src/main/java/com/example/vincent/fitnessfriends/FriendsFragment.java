@@ -13,6 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,41 +48,60 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        String jsonString = getActivity().getIntent().getExtras().get(JSON_FRIENDS_LIST) + "";
         View view = inflater.inflate(R.layout.fragment_friends_tab, container, false);
         LinearLayout ll = (LinearLayout) view;
         ListView list = (ListView) ll.findViewById(R.id.listView);
-
         List<String> nameList = new ArrayList<>();
         TextView text = new TextView(getContext());
-        text.setText("Friends");
+
+        text.setText("Facebook Friends");
         list.addHeaderView(text);
         nameList.add("Vincent Thai");
         nameList.add("Josh Granata");
         nameList.add("Sam Lee");
-        nameList.add(getActivity().getIntent().getExtras().get(JSON_FRIENDS_LIST) + "");
+        if(jsonString.length() > 0) {
+            try {
+                parseJSON((ArrayList) nameList, jsonString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         //nameList.add(getActivity().getIntent().getExtras().get(JSON_FRIENDS_LIST) + "");
         MyArrayAdapter adapter = new MyArrayAdapter(this.getContext(),R.layout.list_item, nameList);
         list.setAdapter(adapter);
         return view;
     }
-    public void parseJSON(List<String> list, String temp){
 
+    public void parseJSON(ArrayList<String> list, String temp) throws JSONException {
+        JSONArray jArray = new JSONArray(temp);
+        for(int i = 0 ; i < jArray.length(); i++){
+            JSONObject friends = jArray.getJSONObject(i);
+            list.add(friends.get("name")+"");
+            Log.d("FACEBOOK2",""+friends.get("name"));
+        }
     }
+
 }
 class MyArrayAdapter extends ArrayAdapter{
+
     private List<String> list;
     private int resource;
+
     public MyArrayAdapter(Context context, int resource,  List<String> list ){
         super(context,resource, list);
         this.list = (ArrayList) list;
         this.resource = resource;
     }
+
     public View getView(int position, View convertView, ViewGroup parent){
         return createViewFromResource(position, convertView, parent, resource);
     }
+
     public String getItem(int position){
         return list.get(position);
     }
+
     public View createViewFromResource(int position, View convertView, ViewGroup parent, int resource){
         View view;
         LayoutInflater mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
