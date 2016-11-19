@@ -35,6 +35,11 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
 
+    <!--generic_textbox Strings-->
+    <string name="Example">Example showing EditText</string>
+    <string name="print">print stuff</string>
+    <string name="Enter_Stuff">enter stuff</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
