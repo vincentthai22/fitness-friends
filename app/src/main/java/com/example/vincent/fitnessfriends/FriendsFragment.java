@@ -48,7 +48,12 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        String jsonString = getActivity().getIntent().getExtras().get(JSON_FRIENDS_LIST) + "";
+        String jsonString = "";
+        try {
+            jsonString = getActivity().getIntent().getExtras().getString(JSON_FRIENDS_LIST);
+        }catch (NullPointerException e) {
+
+        }
         View view = inflater.inflate(R.layout.fragment_friends_tab, container, false);
         LinearLayout ll = (LinearLayout) view;
         ListView list = (ListView) ll.findViewById(R.id.listView);

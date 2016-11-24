@@ -1,37 +1,24 @@
 package com.example.vincent.fitnessfriends;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Dialog;
-import android.app.FragmentTransaction;
-import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
-import com.facebook.CallbackManager;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.*;
@@ -44,9 +31,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import static android.content.ContentValues.TAG;
 import static com.example.vincent.fitnessfriends.FriendsFragment.JSON_FRIENDS_LIST;
@@ -66,25 +50,38 @@ public class MainActivity extends AppCompatActivity {
 
     //Keys to get String info from facebook
     private static final String FACEBOOK_NAME = "facebookLogin";
+    private String userName;
 
     //FireBase database instances
     // Write a message to the database
-    public static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    public static DatabaseReference myRef = database.getReference("message");
+    public  FirebaseDatabase database = FirebaseDatabase.getInstance();
+    public  DatabaseReference myRef = database.getReference("message");
 
     AlertDialog.Builder builder;
     AlertDialog dialog;
 
+    //Fragment Manager and Transaction
+    FragmentManager fragmentManager;
+    android.support.v4.app.FragmentTransaction transaction;
+
+    @Override
+    public FragmentManager getSupportFragmentManager() {
+        return super.getSupportFragmentManager();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        setContentView(R.layout.activity_main);
+
         myRef.setValue("Hello database");
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
-        Log.d("FACEBOOKJSON", getIntent().getExtras().getString(JSON_FRIENDS_LIST));
-        setContentView(R.layout.activity_main);
+
+
         fbTracker = new AccessTokenTracker() {                      //uses token to check if user has logged out.
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken accessToken, AccessToken accessToken2) {
@@ -110,8 +107,10 @@ public class MainActivity extends AppCompatActivity {
                 // ...
             }
         };
-
-
+        if(savedInstanceState!= null) {
+            getIntent().putExtra(JSON_FRIENDS_LIST, (String) savedInstanceState.get(JSON_FRIENDS_LIST));
+            Log.d("FACEBOOKJSON", getIntent().getExtras().getString(JSON_FRIENDS_LIST));
+        }
        initialize();
 
     }
@@ -133,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 return true;
             case R.id.editProfileButton:
+                startEditProfileActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -142,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void initialize(){
         if(Profile.getCurrentProfile() != null) {
-            Toast.makeText(getApplicationContext(), "Logged in as " + Profile.getCurrentProfile().getName(), Toast.LENGTH_LONG).show();
+            userName = Profile.getCurrentProfile().getName();
+            Toast.makeText(getApplicationContext(), "Logged in as " + userName, Toast.LENGTH_LONG).show();
         }
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
@@ -163,9 +164,21 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         android.support.v7.app.ActionBar ab = getSupportActionBar();
 
-        ab.setDisplayHomeAsUpEnabled(true);
+        //ab.setDisplayHomeAsUpEnabled(true);
 
+        // setup alertbox
        setAlertBox();
+
+
+
+    }
+    public void startEditProfileActivity(){
+        Intent intent = new Intent(this, EditProfileActivity.class);
+        Bundle args = new Bundle();
+        args.putString(FACEBOOK_NAME, userName);
+        intent.putExtras(args);
+        intent.putExtras(getIntent().getExtras());
+        startActivity(intent);
     }
     public void setAlertBox(){
         builder = new AlertDialog.Builder(this);
@@ -194,7 +207,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void startLoginActivity(){
         Intent intent = new Intent(this, LoginActivity.class);
+        finish();
         startActivity(intent);
+
     }
 
     @Override
@@ -210,7 +225,29 @@ public class MainActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        //NavUtils.navigateUpFromSameTask(this);
+        //NavUtils.navigateUpTo(this.getParent(),this.getParentActivityIntent());
+        this.finish();
+    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+      //  super.onCreate(savedInstanceState);
+        if(savedInstanceState != null){
+            savedInstanceState.putString(JSON_FRIENDS_LIST, getIntent().getExtras().getString(JSON_FRIENDS_LIST));
+        }else{
 
+        }
+    }
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        getIntent().putExtra(JSON_FRIENDS_LIST, (String)savedInstanceState.get(JSON_FRIENDS_LIST));
+//        userScore = savedInstanceState.getInt(USER_POINTS);
+
+    }
     private void makeLists() {
         liHead = new ArrayList<>();
         liChild = new HashMap<>();

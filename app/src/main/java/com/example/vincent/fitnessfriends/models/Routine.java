@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
+
+import com.example.vincent.fitnessfriends.R;
+
 /**
  * Created by Vincent on 10/25/2016.
  */
@@ -22,7 +25,7 @@ public class Routine extends Activity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.generic_textbox);
 
-            edit = (EditText) findViewById(R.id.edittext);
+            edit = (EditText) findViewById(R.id.edit);
             button = (Button) findViewById(R.id.button);
 
             button.setOnClickListener(new OnClickListener() {

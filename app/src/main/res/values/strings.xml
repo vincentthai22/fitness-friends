@@ -25,6 +25,8 @@
     <string name="action_cancel">Cancel</string>
     <string name="title_activity_tab1">TabActivity1</string>
 
+    <!--EDIT PROFILE STRINGS-->
+    <string name="edit_profile_label">Edit Profile</string>
     <!--MENU BAR STRINGS-->
     <string name="edit_profile">Edit Profile</string>
     <string name="logout">Logout</string>
