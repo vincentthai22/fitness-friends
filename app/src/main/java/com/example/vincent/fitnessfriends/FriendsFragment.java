@@ -28,6 +28,7 @@ public class FriendsFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String JSON_FRIENDS_LIST = "JSON_FRIENDS_LIST";
     private int mPage;
+    private ArrayList<ArrayList<String>> listViewData;
 
     public static FriendsFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -91,9 +92,15 @@ public class FriendsFragment extends Fragment {
 class MyArrayAdapter extends ArrayAdapter{
 
     private List<String> list;
-    private int resource;
+    private int resource, headerResource;
 
-    public MyArrayAdapter(Context context, int resource,  List<String> list ){
+    public MyArrayAdapter(Context context, int resource, int headerResource,  List<String> list){
+        super(context,resource, list);
+        this.list = (ArrayList) list;
+        this.resource = resource;
+        this.headerResource = headerResource;
+    }
+    public MyArrayAdapter(Context context, int resource,  List<String> list){
         super(context,resource, list);
         this.list = (ArrayList) list;
         this.resource = resource;
@@ -110,18 +117,29 @@ class MyArrayAdapter extends ArrayAdapter{
     public View createViewFromResource(int position, View convertView, ViewGroup parent, int resource){
         View view;
         LayoutInflater mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        TextView text;
+        TextView text, rightText;
         ImageView img;
         if(convertView == null)
             view = mInflater.inflate(resource,parent,false);
         else
             view = convertView;
+        switch(resource) {
+            case R.layout.list_item:
+                text = (TextView) view.findViewById(R.id.nameLabel);
+                img = (ImageView) view.findViewById(R.id.profileImage);
+                Log.d("setText", "" + getItem(position));
+                text.setText(getItem(position));
+                img.setImageResource(R.drawable.profile_placeholder);
+                return view;
+            case R.layout.list_header:
+            case R.layout.edit_profile_list_item:
+                text = (TextView) view.findViewById(R.id.leftTextView);
+                rightText = (TextView) view.findViewById(R.id.rightTextView);
+                text.setText(getItem(position));
+                rightText.setText(getItem(position));
 
-        text = (TextView) view.findViewById(R.id.nameLabel);
-        img = (ImageView) view.findViewById(R.id.profileImage);
-        Log.d("setText", ""+getItem(position));
-        text.setText(""+getItem(position));
-        img.setImageResource(R.drawable.profile_placeholder);
+
+        }
         return view;
     }
 }

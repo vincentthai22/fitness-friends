@@ -35,7 +35,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        LinearLayout ll = (LinearLayout) view;
+//        LinearLayout ll = (LinearLayout) view;
         //TextView textView = (TextView) ll.findViewById(R.id.fragmentText);
        // textView.setText("Fragment # Friends" + mPage);
         return view;

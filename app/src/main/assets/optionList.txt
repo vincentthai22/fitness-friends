@@ -1,0 +1,7 @@
+User Name
+Profile Photo
+Height
+Gender
+Starting Weight
+Current Weight
+Goals

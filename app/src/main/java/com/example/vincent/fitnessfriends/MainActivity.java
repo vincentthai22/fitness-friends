@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private AccessTokenTracker fbTracker;//fb tracker used to detect changes log in/out
 
     //Keys to get String info from facebook
-    private static final String FACEBOOK_NAME = "facebookLogin";
+    public static final String FACEBOOK_NAME = "facebookLogin";
     private String userName;
 
     //FireBase database instances
@@ -175,7 +175,8 @@ public class MainActivity extends AppCompatActivity {
     public void startEditProfileActivity(){
         Intent intent = new Intent(this, EditProfileActivity.class);
         Bundle args = new Bundle();
-        args.putString(FACEBOOK_NAME, userName);
+        if(Profile.getCurrentProfile() != null)
+            args.putString(FACEBOOK_NAME, Profile.getCurrentProfile().getFirstName());
         intent.putExtras(args);
         intent.putExtras(getIntent().getExtras());
         startActivity(intent);

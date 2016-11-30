@@ -78,9 +78,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
 
     //Keys to get String info from facebook
-    private static final String FACEBOOK_NAME = "facebookLogin";
+    public static final String FACEBOOK_NAME = "facebookLogin";
 
-    private static final String FIREBASE_TAG = "firebaseTag";
+    public static final String FIREBASE_TAG = "firebaseTag";
 
     /**
      * A dummy authentication store containing known user names and passwords.
