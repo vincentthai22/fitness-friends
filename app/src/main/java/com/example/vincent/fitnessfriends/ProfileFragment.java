@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,9 +38,23 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-//        LinearLayout ll = (LinearLayout) view;
+        final GridLayout gl = (GridLayout) view;
+        final LinearLayout ll = (LinearLayout) view.findViewById(R.id.profileLinearLayout);
+        Button postButton  = (Button) ll.findViewById(R.id.postButton);
+        final EditText status = (EditText) ll.findViewById(R.id.statusUpdate);
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView newStatus = new TextView(getContext());
+                newStatus.setText(status.getText());
+                newStatus.setPadding(10,0,0,0);
+                newStatus.setTextSize(18);
+                ll.addView(newStatus);
+            }
+        });
         //TextView textView = (TextView) ll.findViewById(R.id.fragmentText);
        // textView.setText("Fragment # Friends" + mPage);
         return view;
     }
+
 }

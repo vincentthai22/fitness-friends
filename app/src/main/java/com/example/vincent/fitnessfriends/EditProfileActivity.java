@@ -1,9 +1,12 @@
 package com.example.vincent.fitnessfriends;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,9 +36,9 @@ import static com.example.vincent.fitnessfriends.MainActivity.FACEBOOK_NAME;
  */
 
 public class EditProfileActivity extends AppCompatActivity {
-
-
-
+    private static final String PROFILE_PICTURE = "profilePicture";
+    private final int REQUEST_IMAGE_CAPTURE= 1;
+    ImageButton profileImage;
 
 
 
@@ -58,6 +61,7 @@ public class EditProfileActivity extends AppCompatActivity {
         MyArrayAdapter adapter = new MyArrayAdapter(this.getApplicationContext(),R.layout.edit_profile_list_item, optionList);
 
         list.setAdapter(adapter);
+        setupProfileImage();
        // TextView aboutLabel = (TextView) findViewById(R.id.aboutLabel);
       //  aboutLabel.setText(aboutLabel.getText() + " " + getIntent().getExtras().getString(FACEBOOK_NAME));
     }
@@ -94,13 +98,30 @@ public class EditProfileActivity extends AppCompatActivity {
     }
     //Sets up profile image onclick listener
     public void setupProfileImage(){
-        ImageButton profileImage = (ImageButton) findViewById(R.id.imageButton);
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        profileImage = (ImageButton) findViewById(R.id.profileImage);
+        if(getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            profileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dispatchTakePictureIntent(view);
+                }
+            });
+        }
+    }
+    public void dispatchTakePictureIntent(View view) {
+        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if( takePicture.resolveActivity(getPackageManager()) != null)
+            startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE );
+    }
 
-            }
-        });
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            profileImage.setImageBitmap(imageBitmap);
+            this.getParentActivityIntent().putExtra(PROFILE_PICTURE, imageBitmap);
+        }
     }
     @Override
     public void onBackPressed(){

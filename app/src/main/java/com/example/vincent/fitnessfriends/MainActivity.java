@@ -236,10 +236,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
       //  super.onCreate(savedInstanceState);
-        if(savedInstanceState != null){
-            savedInstanceState.putString(JSON_FRIENDS_LIST, getIntent().getExtras().getString(JSON_FRIENDS_LIST));
-        }else{
+        try {
+            if (savedInstanceState != null) {
+                savedInstanceState.putString(JSON_FRIENDS_LIST, getIntent().getExtras().getString(JSON_FRIENDS_LIST));
+            } else {
 
+            }
+        } catch (NullPointerException e){
+            Toast.makeText(getApplicationContext(),"unable to load facebook friends list", Toast.LENGTH_SHORT).show();
         }
     }
     @Override

@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -63,9 +64,15 @@ public class FriendsFragment extends Fragment {
 
         text.setText("Facebook Friends");
         list.addHeaderView(text);
-        nameList.add("Vincent Thai");
+        nameList.add("Charly Thai");
         nameList.add("Josh Granata");
         nameList.add("Sam Lee");
+        nameList.add("Sampath Jayarantha");
+        nameList.add("Ricky Bobby");
+        nameList.add("Bobby Ricky");
+        nameList.add("Morty");
+        nameList.add("Tom From MySpace");
+        nameList.add("Zuchinni");
         if(jsonString.length() > 0) {
             try {
                 parseJSON((ArrayList) nameList, jsonString);
@@ -73,6 +80,7 @@ public class FriendsFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+        Collections.sort(nameList);
         //nameList.add(getActivity().getIntent().getExtras().get(JSON_FRIENDS_LIST) + "");
         MyArrayAdapter adapter = new MyArrayAdapter(this.getContext(),R.layout.list_item, nameList);
         list.setAdapter(adapter);
@@ -133,10 +141,12 @@ class MyArrayAdapter extends ArrayAdapter{
                 return view;
             case R.layout.list_header:
             case R.layout.edit_profile_list_item:
-                text = (TextView) view.findViewById(R.id.leftTextView);
-                rightText = (TextView) view.findViewById(R.id.rightTextView);
-                text.setText(getItem(position));
-                rightText.setText(getItem(position));
+                    text = (TextView) view.findViewById(R.id.leftTextView);
+                    rightText = (TextView) view.findViewById(R.id.rightTextView);
+                    text.setText(getItem(position));
+                    rightText.setText(getItem(position));
+
+
 
 
         }

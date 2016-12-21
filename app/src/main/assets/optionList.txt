@@ -5,3 +5,4 @@ Gender
 Starting Weight
 Current Weight
 Goals
+About

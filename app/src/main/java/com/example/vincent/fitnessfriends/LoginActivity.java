@@ -264,17 +264,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     HttpMethod.GET,
                     new GraphRequest.Callback() {
                         public void onCompleted(GraphResponse response) {
-                            Log.d("FACEBOOK", response.toString());
-                            Log.d("FACEBOOK", response.getRawResponse());
                             try {
-                                Log.d("FACEBOOK", response.getJSONObject().getString("data"));
-                                String temp = response.getJSONObject().getString("data");
-                                Intent i = new Intent(getBaseContext(), MainActivity.class);
-                                i.putExtra(JSON_FRIENDS_LIST, temp);
-                                startActivity(i);
+                                Log.d("FACEBOOK", response.toString());
+                                Log.d("FACEBOOK", response.getRawResponse());
+                                try {
+                                    Log.d("FACEBOOK", response.getJSONObject().getString("data"));
+                                    String temp = response.getJSONObject().getString("data");
+                                    Intent i = new Intent(getBaseContext(), MainActivity.class);
+                                    i.putExtra(JSON_FRIENDS_LIST, temp);
+                                    startActivity(i);
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            } catch (NullPointerException e){
+                                Toast.makeText(getApplicationContext(),"Unable to connect to internet.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

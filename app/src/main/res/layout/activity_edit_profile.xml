@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-        android:id="@+id/imageButton2" />
+        android:id="@+id/profileImage" />
 
     <ListView
         android:layout_width="match_parent"

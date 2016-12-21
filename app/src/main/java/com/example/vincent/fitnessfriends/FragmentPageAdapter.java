@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
+import com.example.vincent.fitnessfriends.models.Routine;
+
 /**
  * Created by Vincent on 11/1/2016.
  */
@@ -30,6 +32,10 @@ public class FragmentPageAdapter extends FragmentPagerAdapter {
         switch(position) {                                              //cases are respective to the tabTitles array.
             case 0:                                                     //make a new xml file to change the layout of
                 return ProfileFragment.newInstance(position + 1);       //a desired individual fragment.
+            case 1:
+                return FriendsFragment.newInstance(position +1);
+            case 2:
+                return RoutineFragment.newInstance(position + 1);
             default:
                 return FriendsFragment.newInstance(position + 1);       //Ex: case 0 is respective to index 0 which is
         }                                                               //profile frag. Within ProfileFragment.java the
